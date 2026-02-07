@@ -8,7 +8,6 @@ data class ProjectIntakeEvent(
     val context: String,
     val painPoints: List<String>,
     val budgetRange: BudgetRangeEvent,
-    val additionalNotes: String?,
-    val email: String
+    val additionalNotes: String?
 ) {
 }

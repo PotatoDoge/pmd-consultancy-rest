@@ -17,8 +17,7 @@ class ProjectIntakeModelMapper {
             context = projectIntake.context,
             painPoints = projectIntake.painPoints,
             budgetRange = budgetRangeToDomainModel(projectIntake.budgetRange),
-            additionalNotes = projectIntake.additionalNotes,
-            email = projectIntake.email
+            additionalNotes = projectIntake.additionalNotes
         )
     }
 

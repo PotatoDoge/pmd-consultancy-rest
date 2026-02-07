@@ -17,8 +17,7 @@ class ProjectIntakeMapper {
             context = projectIntakeRequest.context,
             painPoints = projectIntakeRequest.painPoints,
             budgetRange = budgetRangeRequestToObject(projectIntakeRequest.budgetRange),
-            additionalNotes = projectIntakeRequest.additionalNotes,
-            email = projectIntakeRequest.email
+            additionalNotes = projectIntakeRequest.additionalNotes
         )
     }
 

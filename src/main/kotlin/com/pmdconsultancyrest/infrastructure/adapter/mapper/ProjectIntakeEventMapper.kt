@@ -18,8 +18,7 @@ class ProjectIntakeEventMapper {
             context = projectIntakeModel.context,
             painPoints = projectIntakeModel.painPoints,
             budgetRange = budgetRangeToEvent(projectIntakeModel.budgetRange),
-            additionalNotes = projectIntakeModel.additionalNotes,
-            email = projectIntakeModel.email
+            additionalNotes = projectIntakeModel.additionalNotes
         )
     }
 

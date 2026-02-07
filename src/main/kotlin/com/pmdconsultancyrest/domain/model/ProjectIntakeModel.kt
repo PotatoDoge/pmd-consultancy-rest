@@ -9,6 +9,5 @@ data class ProjectIntakeModel (
     val context: String,
     val painPoints: List<String>,
     val budgetRange: BudgetRangeModel,
-    val additionalNotes: String?,
-    val email: String
+    val additionalNotes: String?
 )

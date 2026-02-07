@@ -7,6 +7,5 @@ data class ProjectIntake(
     val context: String,
     val painPoints: List<String>,
     val budgetRange: BudgetRange,
-    val additionalNotes: String?,
-    val email: String
+    val additionalNotes: String?
 )
