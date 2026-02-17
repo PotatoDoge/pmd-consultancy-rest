@@ -6,6 +6,7 @@ import com.pmdconsultancyrest.domain.model.ProjectIntake
 import com.pmdconsultancyrest.infrastructure.adapter.out.kafka.dto.ProjectIntakeEvent
 import com.pmdconsultancyrest.infrastructure.adapter.out.kafka.mapper.ProjectIntakeEventMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 
@@ -24,7 +25,9 @@ private val log = KotlinLogging.logger {}
 class KafkaProjectIntakePublisher(
     private val kafkaTemplate: KafkaTemplate<String, ProjectIntakeEvent>,
     private val mapper: ProjectIntakeEventMapper,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    @Value("\${kafka.topics.project-intake}")
+    private val topicName: String
 ) : ProjectIntakeEventPublisher {
 
     override fun publish(projectIntake: ProjectIntake) {
@@ -33,12 +36,17 @@ class KafkaProjectIntakePublisher(
         // Convert domain to DTO
         val event = mapper.toEvent(projectIntake)
 
-        // Log event for debugging
         val eventJson = objectMapper.writeValueAsString(event)
         log.debug { "Kafka event: $eventJson" }
 
-        // TODO: Publish to Kafka when topic is configured
-        // kafkaTemplate.send("project-intake-topic", projectIntake.clientName, event)
+        kafkaTemplate.send(topicName, projectIntake.clientName, event)
+            .whenComplete { _, ex ->
+                if (ex != null) {
+                    log.error(ex) { "Failed to publish project intake: ${projectIntake.clientName}" }
+                } else {
+                    log.info { "Project intake published successfully to topic '$topicName': ${projectIntake.clientName}" }
+                }
+            }
 
         log.info { "Project intake published successfully: ${projectIntake.clientName}" }
     }
