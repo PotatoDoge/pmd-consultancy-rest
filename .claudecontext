@@ -1,0 +1,78 @@
+# Project Context
+
+## Project Name
+PMD Consultancy REST API
+
+## What This Project Does
+A REST API service for submitting and processing project intake requests. It validates business rules, enriches data with domain logic, and publishes processed events to Kafka for downstream consumption.
+
+## Architecture
+Hexagonal Architecture (Ports and Adapters) - Strictly following the pattern defined in INSTRUCTIONS.md
+
+## Layer Structure
+- `domain/` - Pure business logic (ZERO framework dependencies)
+  - `model/` - Rich domain entities (ProjectIntake, BudgetRange) with validation & business rules
+  - `service/` - Domain services (ProjectIntakeDomainService) for multi-entity logic
+  - `exception/` - Business rule exceptions
+
+- `application/` - Use cases, ports, orchestration services
+  - `port/in/` - Input ports (ProcessProjectIntakePort) - what app CAN DO
+  - `port/out/` - Output ports (ProjectIntakeEventPublisher) - what app NEEDS
+  - `service/` - Application services (ProcessProjectIntakeService) - orchestration only
+  - `config/` - Domain service wiring (DomainWiringConfig)
+
+- `infrastructure/` - Adapters, DTOs, mappers, configs
+  - `adapter/in/rest/` - REST input adapter with DTOs and mappers
+  - `adapter/out/kafka/` - Kafka output adapter with DTOs and mappers
+  - `config/` - Infrastructure configs (CORS, Jackson, OpenAPI)
+
+## Key Architectural Rules
+1. **Domain layer is 100% framework-agnostic** (no Spring, no Kafka, pure Kotlin)
+2. **Business logic ONLY in domain** (models and services)
+3. **Application services orchestrate ONLY** (no business logic)
+4. **Adapters are thin** - only handle DTO ↔ Domain mapping
+5. **Input adapters CALL input ports** with domain models
+6. **Output adapters IMPLEMENT output ports** and work with domain models
+7. **Dependencies flow inward**: Infrastructure → Application → Domain
+
+## Technologies
+- Kotlin
+- Spring Boot 4.0.2
+- Spring Kafka
+- Gradle 9.3.0
+- Java 21+
+- SpringDoc OpenAPI
+- Kotlin Logging
+
+## Important Files
+- `INSTRUCTIONS.md` - Complete hexagonal architecture implementation guide
+- `ABOUT.md` - Project documentation with architecture details
+
+## Current State
+✅ **Fully refactored to hexagonal architecture**
+- REST endpoint receives ProjectIntakeRequest
+- Mapper converts DTO → Domain (ProjectIntake)
+- Input port processes project intake
+- Domain models validate and apply business rules (priority, category, team assignment)
+- Domain service provides multi-entity logic (scoring, team assignment, compliance)
+- Application service orchestrates workflow
+- Output adapter publishes to Kafka (currently stubbed, TODO: configure topics)
+
+## Domain Business Rules
+**ProjectIntake**:
+- Validation, priority calculation, category determination
+- Senior review detection, response time estimation
+
+**BudgetRange** (Value Object):
+- Validation, budget category, display formatting
+
+**ProjectIntakeDomainService**:
+- Team assignment, auto-approval, priority scoring, compliance review
+
+## API Endpoint
+- **POST** `/api/v1/project-intakes` - Submit project intake (202 Accepted)
+
+## Future TODOs
+1. Add database repository output adapter
+2. Configure Kafka topics and enable publishing
+3. Add authentication & authorization

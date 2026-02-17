@@ -1,4 +1,4 @@
-package com.pmdconsultancyrest.infrastructure.adapter.`in`.web.dto
+package com.pmdconsultancyrest.infrastructure.adapter.`in`.rest.dto
 
 data class BudgetRangeRequest(
     val min: Int,
