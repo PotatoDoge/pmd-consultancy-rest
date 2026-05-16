@@ -13,8 +13,13 @@ data class ProjectIntakeRequest(
     val clientName: String,
     val industry: String,
     val companySize: String,
+    val primaryContact: String,
+    val contactEmail: String,
+    val contactPhone: String,
+    val location: String,
     val context: String,
     val painPoints: List<String>,
     val budgetRange: BudgetRangeRequest,
+    val timeline: String,
     val additionalNotes: String? = null
 )
